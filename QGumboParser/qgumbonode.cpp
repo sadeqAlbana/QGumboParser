@@ -120,10 +120,16 @@ QGumboNodes QGumboNode::getElementsByClassName(const QString& name) const
 #if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
             const QVector<QStringRef> parts =
                     value.splitRef(QChar(' '), QString::SkipEmptyParts, Qt::CaseInsensitive);
-#else
+#elif QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             const QVector<QStringRef> parts =
                     value.splitRef(QChar(' '), Qt::SkipEmptyParts, Qt::CaseInsensitive);
+#else
+            const QList<QStringView> parts =
+                QStringView { value }.split(u8' ');
+
 #endif
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
             for (const QStringRef& part: parts) {
                 if (part.compare(name, Qt::CaseInsensitive) == 0) {
@@ -131,6 +137,15 @@ QGumboNodes QGumboNode::getElementsByClassName(const QString& name) const
                     break;
                 }
             }
+
+#else
+            for (const QStringView& part: parts) {
+                if (part.compare(name, Qt::CaseInsensitive) == 0) {
+                    nodes.emplace_back(QGumboNode(node));
+                    break;
+                }
+            }
+#endif
         }
         return false;
     };

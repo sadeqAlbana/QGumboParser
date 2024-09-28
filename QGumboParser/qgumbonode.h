@@ -5,12 +5,15 @@
 #include <functional>
 #include "gumbo-parser/src/gumbo.h"
 #include "HtmlTag.h"
+#include <QtCore/QtGlobal>
 
 class QString;
 class QGumboNode;
 class QGumboAttribute;
 class QGumboDocument;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 class QStringList;
+#endif
 
 typedef std::vector<QGumboNode> 		QGumboNodes;
 typedef std::vector<QGumboAttribute> 	QGumboAttributes;
